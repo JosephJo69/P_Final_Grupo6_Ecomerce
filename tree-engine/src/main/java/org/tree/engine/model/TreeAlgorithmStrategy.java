@@ -27,10 +27,12 @@ public interface TreeAlgorithmStrategy {
     // 5. Ruta desde raíz a un nodo
     List<CategoryNode> getPathFromRoot(String nodeId);
 
-    // 6. Recorrido DFS
+ // 6. Recorrido DFS: Explora cada rama hasta el final antes de pasar a la siguiente.
+    
     List<CategoryNode> getDFS();
 
-    // 7. Recorrido BFS
+ // 7. Recorrido BFS: Explora el árbol nivel por nivel (primero todos los hijos, luego todos los nietos).
+   
     List<CategoryNode> getBFS();
 
     // 8. Altura del árbol
