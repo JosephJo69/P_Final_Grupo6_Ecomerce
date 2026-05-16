@@ -1,3 +1,6 @@
 org\tree\engine\model\CategoryNode.class
 org\tree\engine\model\TreeAlgorithmStrategy.class
+org\tree\engine\service\TreeService.class
+org\tree\engine\service\impl\InMemoryTreeService.class
+org\tree\engine\model\TreeNode.class
 org\tree\engine\CustomTreeImpl.class
