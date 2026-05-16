@@ -1,0 +1,49 @@
+openapi: 3.0.3
+
+info:
+  title: E-commerce Tree API
+  version: 1.0.0
+  description: API para gestión de estructuras jerárquicas
+
+servers:
+  - url: http://localhost:8080
+
+paths:
+
+  /nodes/root:
+    post:
+      summary: Crear nodo raíz
+
+      requestBody:
+        required: true
+
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateNodeRequest'
+
+      responses:
+        '201':
+          description: Nodo raíz creado
+
+  /tree:
+    get:
+      summary: Obtener árbol completo
+
+      responses:
+        '200':
+          description: Árbol obtenido correctamente
+
+components:
+
+  schemas:
+
+    CreateNodeRequest:
+      type: object
+
+      properties:
+        value:
+          type: string
+
+      required:
+        - value
