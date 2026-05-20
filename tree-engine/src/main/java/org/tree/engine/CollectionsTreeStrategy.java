@@ -41,10 +41,7 @@ public class CollectionsTreeStrategy implements TreeAlgorithmStrategy {
         List<CategoryNode> result = new ArrayList<>();
         if (nodes.isEmpty()) return result;
 
-        // Construimos mapa de id -> nodo
-        Map<String, CategoryNode> map = new HashMap<>();
-        for (CategoryNode n : nodes) map.put(n.getId(), n);
-
+        
         // Buscamos la raíz (el que no tiene parentId)
         CategoryNode root = null;
         for (CategoryNode n : nodes) {
