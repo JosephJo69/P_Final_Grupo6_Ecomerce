@@ -24,7 +24,7 @@ public class TreeController {
     /*
      * Endpoint para crear la raíz.
      */
-    @PostMapping("/root")
+    @GetMapping("/root")
     public TreeNode createRoot(
             @RequestParam String value
     ) {
