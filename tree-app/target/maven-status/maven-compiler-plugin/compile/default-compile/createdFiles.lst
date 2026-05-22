@@ -1,6 +1,6 @@
 gt\edu\umg\repository\PostgresRepository.class
 gt\edu\umg\model\MongoNode.class
 gt\edu\umg\repository\MemoryRepository.class
-controller\TreeController.class
+gt\edu\umg\controller\TreeController.class
 gt\edu\umg\TreeAppApplication.class
 gt\edu\umg\repository\MongoNodeRepository.class
