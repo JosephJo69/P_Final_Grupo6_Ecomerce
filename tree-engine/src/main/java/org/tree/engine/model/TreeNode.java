@@ -1,13 +1,14 @@
 package org.tree.engine.model;
-
-import java.util.List;
 import java.util.ArrayList;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.List;
 
 public class TreeNode {
 
 	private String id;
 	private String value; //valor o  nombre del nodo
-	private TreeNode parent;//referencia al nodo padre
+	@JsonIgnore
+	private TreeNode parent;
 	private List<TreeNode> children = new ArrayList<>();// Lsita d hijos del nodo actual, se inicializa vacía automaticamente
 public TreeNode() {
 	//permite crear un nodo sin especificar id o valor, se pueden establecer posteriormente usando los setters
