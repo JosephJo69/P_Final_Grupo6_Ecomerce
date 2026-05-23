@@ -1,5 +1,8 @@
 package org.tree.engine.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Clase que representa una categoría en el sistema de E-commerce.
  * Es el modelo de datos básico para construir la estructura jerárquica.
@@ -10,8 +13,12 @@ public class CategoryNode {
     private String description;
     private String parentId; // Referencia fundamental para la persistencia y reconstrucción del árbol
 
+    // ATRIBUTO AGREGADO: Lista interna para almacenar las referencias a sus nodos hijos
+    private List<CategoryNode> children = new ArrayList<>();
+
     // Constructor vacío (necesario para frameworks como Jackson/Spring)
     public CategoryNode() {
+        this.children = new ArrayList<>();
     }
 
     // Constructor con campos
@@ -20,10 +27,31 @@ public class CategoryNode {
         this.name = name;
         this.parentId = parentId;
         this.description = description;
+        this.children = new ArrayList<>();
     }
 
-    // Getters y Setters. Estos son placeholders funcionales, si alguno de ustedes 
-    //tiene una mejor idea de cómo estructurar esto, por favor siéntase libre de modificarlo y comentarlo en el grupo.
+    // --- MÉTODOS DE LA SEMANA 2: Gestión de nodos hijos ---
+
+    public List<CategoryNode> getChildren() {
+        if (this.children == null) {
+            this.children = new ArrayList<>();
+        }
+        return children;
+    }
+
+    public void setChildren(List<CategoryNode> children) {
+        this.children = (children != null) ? children : new ArrayList<>();
+    }
+
+    public void addChildNode(CategoryNode child) {
+        if (this.children == null) {
+            this.children = new ArrayList<>();
+        }
+        this.children.add(child);
+    }
+
+    // --- Getters y Setters Estándar ---
+
     public String getId() {
         return id;
     }
