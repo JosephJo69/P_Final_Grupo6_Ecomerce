@@ -1,48 +1,89 @@
-version: '3.9'
-
 services:
 
   postgres:
     image: postgres:16
     container_name: postgres_db
     restart: always
-
+    profiles:
+      - postgres
+      - full
     environment:
       POSTGRES_DB: ecommerce
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin123
-
     ports:
       - "5432:5432"
-
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d ecommerce"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   mongo:
     image: mongo:7
     container_name: mongo_db
     restart: always
-
+    profiles:
+      - mongo
+      - full
     ports:
       - "27017:27017"
-
     volumes:
       - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
-  app:
+  app-memory:
     build: .
-    container_name: springboot_app
+    container_name: springboot_app_memory
     restart: always
-
-    depends_on:
-      - postgres
-      - mongo
-
+    profiles:
+      - memory
     ports:
       - "8081:8080"
-
     environment:
-      SPRING_PROFILES_ACTIVE: docker
+      APP_STORAGE: memory
+      APP_TREE_STRATEGY: custom
+
+  app-mongo:
+    build: .
+    container_name: springboot_app_mongo
+    restart: always
+    profiles:
+      - mongo
+      - full
+    depends_on:
+      mongo:
+        condition: service_healthy
+    ports:
+      - "8081:8080"
+    environment:
+      APP_STORAGE: mongo
+      APP_TREE_STRATEGY: custom
+      SPRING_DATA_MONGODB_URI: mongodb://mongo:27017/ecommerce
+
+  app-postgres:
+    build: .
+    container_name: springboot_app_postgres
+    restart: always
+    profiles:
+      - postgres
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8081:8080"
+    environment:
+      APP_STORAGE: postgres
+      APP_TREE_STRATEGY: collections
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/ecommerce
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: admin123
 
 volumes:
   postgres_data:

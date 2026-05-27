@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @Repository
 @ConditionalOnProperty(name = "app.storage", havingValue = "postgres")
-public class PostgresRepository {
+public class PostgresRepository implements TreeStorageRepository {
 
     private final JdbcTemplate jdbc;
 
@@ -20,6 +20,7 @@ public class PostgresRepository {
         this.jdbc = jdbc;
     }
 
+    @Override
     public CategoryNode save(CategoryNode node) {
         jdbc.update(
             "INSERT INTO nodes (id, name, description, parent_id) VALUES (?, ?, ?, ?)",
@@ -28,10 +29,12 @@ public class PostgresRepository {
         return node;
     }
 
+    @Override
     public List<CategoryNode> findAll() {
         return jdbc.query("SELECT * FROM nodes", rowMapper());
     }
 
+    @Override
     public Optional<CategoryNode> findById(String id) {
         List<CategoryNode> result = jdbc.query(
             "SELECT * FROM nodes WHERE id = ?", rowMapper(), id

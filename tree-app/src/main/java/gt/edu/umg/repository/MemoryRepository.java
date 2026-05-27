@@ -1,6 +1,7 @@
 package gt.edu.umg.repository;
 
 import org.tree.engine.model.CategoryNode;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +14,8 @@ import java.util.Optional;
  * sin esperar a que el Integrante B termine la conexión con PostgreSQL.
  */
 @Repository
-public class MemoryRepository {
+@ConditionalOnProperty(name = "app.storage", havingValue = "memory", matchIfMissing = true)
+public class MemoryRepository implements TreeStorageRepository {
     
     /**
      * Nuestra "tabla" temporal de categorías.
@@ -26,6 +28,7 @@ public class MemoryRepository {
      * @param node El objeto categoría (raíz o hijo) enviado desde el Controller.
      * @return El nodo guardado para confirmar la operación.
      */
+    @Override
     public CategoryNode save(CategoryNode node) {
         storage.add(node);
         return node;
@@ -36,6 +39,7 @@ public class MemoryRepository {
      * Útil para que los motores de búsqueda (Custom/Collections) 
      * obtengan la lista plana y construyan el árbol.
      */
+    @Override
     public List<CategoryNode> findAll() {
         // Retornamos una copia de la lista para proteger la integridad de los datos originales
         return new ArrayList<>(storage);
@@ -46,6 +50,7 @@ public class MemoryRepository {
      * @param id El identificador de la categoría.
      * @return Un Optional que puede contener el nodo si existe.
      */
+    @Override
     public Optional<CategoryNode> findById(String id) {
         return storage.stream()
                 .filter(n -> n.getId().equals(id))

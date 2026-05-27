@@ -1,121 +1,108 @@
-Tecnologías utilizadas
-Java 17
-Spring Boot 3
-Maven
-Docker
-Docker Compose
-PostgreSQL
-MongoDB
-Arquitectura del proyecto
+# PF Grupo 6 E-commerce
 
-El proyecto está dividido en módulos Maven:
+Backend Java 17 con Spring Boot 3 para gestionar arboles de categorias de e-commerce.
 
-PF_Grupo6_Ecomerce
-│
-├── tree-app
-│   └── Aplicación Spring Boot
-│
-├── tree-engine
-│   └── Motor de lógica del árbol
-│
-├── Dockerfile
-├── docker-compose.yml
-└── pom.xml
-Requisitos previos
+## Tecnologias
 
-Antes de ejecutar el proyecto debes tener instalado:
+- Java 17
+- Spring Boot 3
+- Maven
+- Docker y Docker Compose
+- PostgreSQL
+- MongoDB
 
-Docker Desktop
-Docker Compose
-Git
-Java 17
-Maven
-Variables de entorno
+## Arquitectura
 
-El sistema utiliza variables de entorno mediante Docker Compose.
+El proyecto esta dividido en dos modulos Maven:
 
-Variables utilizadas:
+- `tree-engine`: motor de algoritmos del arbol.
+- `tree-app`: API REST Spring Boot e integracion con persistencias.
 
-SPRING_PROFILES_ACTIVE=docker
-POSTGRES_DB=ecommerce
-POSTGRES_USER=admin
-POSTGRES_PASSWORD=admin123
-Servicios del Docker Compose
+## Selectores
 
-El entorno automatiza los siguientes servicios:
+La aplicacion permite cambiar estrategia y persistencia sin modificar codigo:
 
-Servicio	Puerto
-Spring Boot	8081
-PostgreSQL	5432
-MongoDB	27017
-Docker Compose
-Levantar todo el entorno
-docker compose up --build
-Detener el entorno
-docker compose down
-Modo memoria
+- `app.tree-strategy=custom`
+- `app.tree-strategy=collections`
+- `app.storage=memory`
+- `app.storage=postgres`
+- `app.storage=mongo`
 
-El sistema permite ejecutar únicamente la aplicación Spring Boot.
+## Ejecutar con Docker
 
-Ejemplo:
+Los companeros no necesitan instalar MongoDB ni PostgreSQL localmente. Las bases se levantan como contenedores.
 
-docker compose up app
-Validación del sistema
-Verificar contenedores activos
-docker ps
-Ver logs del sistema
-docker logs -f springboot_app
-Verificar endpoint principal
-Crear raíz del árbol
-curl -X POST "http://localhost:8081/tree/root?value=Raiz"
+Modo memoria, solo la app:
 
-Respuesta esperada:
+```bash
+docker compose --profile memory up --build
+```
 
-{
-  "id":"819c9470-7daa-4251-9d54-cd95bff438f2",
-  "value":"Raiz",
-  "children":[]
-}
-Obtener árbol actual
+Modo MongoDB, app + Mongo en Docker:
+
+```bash
+docker compose --profile mongo up --build
+```
+
+Modo PostgreSQL, app + PostgreSQL en Docker:
+
+```bash
+docker compose --profile postgres up --build
+```
+
+Demo completa, app con MongoDB y ambas bases levantadas:
+
+```bash
+docker compose --profile full up --build
+```
+
+La API queda disponible en:
+
+```text
+http://localhost:8081
+```
+
+## Endpoints principales
+
+Crear raiz:
+
+```bash
+curl -X POST http://localhost:8081/nodes/root \
+  -H "Content-Type: application/json" \
+  -d "{\"name\":\"Electronica\",\"description\":\"Categoria raiz\"}"
+```
+
+Agregar hijo:
+
+```bash
+curl -X POST http://localhost:8081/nodes/{parentId}/children \
+  -H "Content-Type: application/json" \
+  -d "{\"name\":\"Computadoras\",\"description\":\"Laptops y desktops\"}"
+```
+
+Consultar arbol completo:
+
+```bash
 curl http://localhost:8081/tree
-Persistencia
+```
 
-El proyecto utiliza volúmenes Docker para mantener persistencia de datos.
+Recorridos y metricas:
 
-Volúmenes utilizados:
+```bash
+curl http://localhost:8081/tree/bfs
+curl http://localhost:8081/tree/dfs
+curl http://localhost:8081/tree/height
+curl http://localhost:8081/tree/{nodeId}/depth
+curl http://localhost:8081/tree/{nodeId}/ancestors
+curl http://localhost:8081/tree/{nodeId}/path
+curl http://localhost:8081/tree/{nodeId}/subtree
+curl http://localhost:8081/tree/validate
+```
 
-postgres_data
-mongo_data
-Dockerfile
+## Entregables cubiertos
 
-La aplicación se construye automáticamente desde el Dockerfile incluido en el repositorio.
-
-Troubleshooting
-Error de puerto ocupado
-Bind for 0.0.0.0 failed: port is already allocated
-
-Solución:
-
-docker compose down
-Error YAML
-found a tab character that violates indentation
-
-Solución:
-
-Reemplazar tabulaciones por espacios en docker-compose.yml
-Error Maven cyclic reference
-The projects in the reactor contain a cyclic reference
-
-Solución:
-
-Eliminar dependencias circulares entre módulos Maven.
-Estado final del proyecto
-
- Docker Compose funcionando
-Spring Boot funcionando
-MongoDB funcionando
-PostgreSQL funcionando
-Endpoints REST funcionando
-Proyecto multi-módulo funcionando
-Variables de entorno configuradas
-Automatización completa del entorno
+- Motor con estrategias `custom` y `collections`.
+- Persistencias seleccionables: memoria, PostgreSQL y MongoDB.
+- MongoDB disponible por Docker Compose, sin instalacion local.
+- Wiring Spring con beans condicionales.
+- API REST para las operaciones principales del arbol.
