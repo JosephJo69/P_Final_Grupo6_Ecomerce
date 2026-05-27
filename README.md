@@ -32,6 +32,59 @@ La aplicacion permite cambiar estrategia y persistencia sin modificar codigo:
 
 Los companeros no necesitan instalar MongoDB ni PostgreSQL localmente. Las bases se levantan como contenedores.
 
+## Ejecutar desde Eclipse con bases en Docker
+
+Primero abre Docker Desktop. La primera vez, abre una terminal en la carpeta donde esta `docker-compose.yml` y crea el contenedor de la base que necesitas.
+
+MongoDB:
+
+```bash
+docker compose --profile mongo up -d mongo
+```
+
+PostgreSQL:
+
+```bash
+docker compose --profile postgres up -d postgres
+```
+
+Despues de crearlos una vez, los contenedores quedan guardados en Docker Desktop como `mongo_db` y `postgres_db`. Para volver a ejecutar el proyecto, solo abre Docker Desktop, enciende el contenedor que necesitas y ejecuta `gt.edu.umg.TreeAppApplication` desde Eclipse con JDK 17 o superior.
+
+La aplicacion ejecutada desde Eclipse queda disponible en:
+
+```text
+http://localhost:8080
+```
+
+Para usar memoria no necesitas contenedor:
+
+```properties
+app.storage=memory
+app.tree-strategy=custom
+```
+
+Para usar MongoDB:
+
+```properties
+app.storage=mongo
+app.tree-strategy=custom
+```
+
+Para usar PostgreSQL:
+
+```properties
+app.storage=postgres
+app.tree-strategy=collections
+```
+
+PostgreSQL de Docker queda disponible para Eclipse en:
+
+```text
+localhost:5433
+```
+
+Se usa `5433` en Windows para evitar conflictos con instalaciones locales de PostgreSQL que suelen ocupar `5432`.
+
 Modo memoria, solo la app:
 
 ```bash

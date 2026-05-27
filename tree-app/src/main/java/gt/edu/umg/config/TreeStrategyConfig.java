@@ -1,6 +1,6 @@
 package gt.edu.umg.config;
 
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.tree.engine.CollectionsTreeStrategy;
@@ -11,14 +11,12 @@ import org.tree.engine.model.TreeAlgorithmStrategy;
 public class TreeStrategyConfig {
 
     @Bean
-    @ConditionalOnProperty(name = "app.tree-strategy", havingValue = "custom", matchIfMissing = true)
-    public TreeAlgorithmStrategy customTreeStrategy() {
+    public TreeAlgorithmStrategy treeAlgorithmStrategy(
+            @Value("${app.tree-strategy:custom}") String strategy
+    ) {
+        if ("collections".equalsIgnoreCase(strategy.trim())) {
+            return new CollectionsTreeStrategy();
+        }
         return new CustomTreeImpl();
-    }
-
-    @Bean
-    @ConditionalOnProperty(name = "app.tree-strategy", havingValue = "collections")
-    public TreeAlgorithmStrategy collectionsTreeStrategy() {
-        return new CollectionsTreeStrategy();
     }
 }

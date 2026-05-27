@@ -2,6 +2,7 @@ package gt.edu.umg.controller;
 
 import gt.edu.umg.dto.CreateNodeRequest;
 import gt.edu.umg.service.CategoryTreeService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,9 +21,19 @@ import java.util.Map;
 public class TreeController {
 
     private final CategoryTreeService treeService;
+    private final String storage;
 
-    public TreeController(CategoryTreeService treeService) {
+    public TreeController(
+            CategoryTreeService treeService,
+            @Value("${app.storage}") String storage
+    ) {
         this.treeService = treeService;
+        this.storage = storage;
+    }
+
+    @GetMapping("/config/storage")
+    public Map<String, String> getStorageConfig() {
+        return Map.of("storage", storage);
     }
 
     @PostMapping("/nodes/root")

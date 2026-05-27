@@ -17,6 +17,7 @@ const elements = {
     heightValue: document.querySelector("#heightValue"),
     validValue: document.querySelector("#validValue"),
     selectedNodeValue: document.querySelector("#selectedNodeValue"),
+    storageLabel: document.querySelector("#storageLabel"),
     refreshButton: document.querySelector("#refreshButton"),
     toast: document.querySelector("#toast")
 };
@@ -73,6 +74,15 @@ async function apiRequest(path, options = {}) {
 function setApiStatus(ok) {
     elements.apiStatus.textContent = ok ? "Conectado" : "Sin conexion";
     elements.apiStatus.className = `status-pill ${ok ? "ok" : "error"}`;
+}
+
+function storageDisplayName(storage) {
+    const names = {
+        memory: "Memoria",
+        mongo: "MongoDB",
+        postgres: "PostgreSQL"
+    };
+    return names[storage] || storage || "API REST";
 }
 
 function nodeOptionLabel(node) {
@@ -198,6 +208,15 @@ async function refreshMetrics() {
     }
 }
 
+async function refreshStorageLabel() {
+    try {
+        const config = await apiRequest("/config/storage");
+        elements.storageLabel.textContent = `${storageDisplayName(config.storage)} / API REST`;
+    } catch (error) {
+        elements.storageLabel.textContent = "API REST";
+    }
+}
+
 async function refreshTree() {
     try {
         const data = await apiRequest("/tree");
@@ -291,4 +310,5 @@ document.querySelectorAll(".tab-button").forEach((button) => {
 
 elements.refreshButton.addEventListener("click", refreshTree);
 
+refreshStorageLabel();
 refreshTree();
