@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>E-commerce Tree API</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <main class="app-shell">
+        <section class="workspace">
+            <aside class="panel tools-panel" aria-label="Controles del arbol">
+                <div class="brand-block">
+                    <p class="eyebrow">Grupo 6</p>
+                    <h1>E-commerce Tree</h1>
+                    <div class="status-row">
+                        <span id="apiStatus" class="status-pill">Conectando</span>
+                        <span id="nodeCount" class="count-pill">0 nodos</span>
+                    </div>
+                </div>
+
+                <form id="rootForm" class="form-block">
+                    <h2>Raiz</h2>
+                    <label>
+                        Nombre
+                        <input id="rootName" name="name" type="text" maxlength="120" placeholder="Electronica" required>
+                    </label>
+                    <label>
+                        Descripcion
+                        <textarea id="rootDescription" name="description" rows="3" maxlength="300" placeholder="Categoria principal"></textarea>
+                    </label>
+                    <button type="submit" class="primary-button">Crear raiz</button>
+                </form>
+
+                <form id="childForm" class="form-block">
+                    <h2>Hijo</h2>
+                    <label>
+                        Padre
+                        <select id="parentSelect" name="parentId" required></select>
+                    </label>
+                    <label>
+                        Nombre
+                        <input id="childName" name="name" type="text" maxlength="120" placeholder="Computadoras" required>
+                    </label>
+                    <label>
+                        Descripcion
+                        <textarea id="childDescription" name="description" rows="3" maxlength="300" placeholder="Laptops y desktops"></textarea>
+                    </label>
+                    <button type="submit" class="primary-button">Agregar hijo</button>
+                </form>
+            </aside>
+
+            <section class="main-panel">
+                <header class="topbar">
+                    <div>
+                        <p class="eyebrow">Persistencia activa</p>
+                        <h2 id="storageLabel">API REST</h2>
+                    </div>
+                    <button id="refreshButton" type="button" class="secondary-button">Actualizar</button>
+                </header>
+
+                <div class="metrics-grid">
+                    <article class="metric-card">
+                        <span>Altura</span>
+                        <strong id="heightValue">0</strong>
+                    </article>
+                    <article class="metric-card">
+                        <span>Validacion</span>
+                        <strong id="validValue">-</strong>
+                    </article>
+                    <article class="metric-card">
+                        <span>Seleccion</span>
+                        <strong id="selectedNodeValue">-</strong>
+                    </article>
+                </div>
+
+                <div class="content-grid">
+                    <section class="panel tree-panel">
+                        <div class="section-heading">
+                            <h2>Arbol</h2>
+                            <select id="nodeSelect" aria-label="Nodo seleccionado"></select>
+                        </div>
+                        <div id="treeView" class="tree-view"></div>
+                    </section>
+
+                    <section class="panel details-panel">
+                        <div class="tabs" role="tablist" aria-label="Vistas de consulta">
+                            <button class="tab-button active" type="button" data-view="bfs">BFS</button>
+                            <button class="tab-button" type="button" data-view="dfs">DFS</button>
+                            <button class="tab-button" type="button" data-view="path">Ruta</button>
+                            <button class="tab-button" type="button" data-view="ancestors">Ancestros</button>
+                            <button class="tab-button" type="button" data-view="subtree">Subarbol</button>
+                            <button class="tab-button" type="button" data-view="json">JSON</button>
+                        </div>
+                        <div id="detailsView" class="details-view"></div>
+                    </section>
+                </div>
+            </section>
+        </section>
+    </main>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <script src="/app.js?v=storage-label"></script>
+</body>
+</html>

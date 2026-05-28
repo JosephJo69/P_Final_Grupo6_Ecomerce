@@ -14,11 +14,12 @@ public class CollectionsTreeStrategy implements TreeAlgorithmStrategy {
 
     @Override
     public void setNodes(List<CategoryNode> nodes) {
-        this.nodes = nodes;
+        this.nodes = (nodes != null) ? nodes : new ArrayList<>();
     }
 
     @Override
     public CategoryNode createRoot(CategoryNode node) {
+        node.setParentId(null);
         this.nodes.add(node);
         return node;
     }
@@ -32,7 +33,27 @@ public class CollectionsTreeStrategy implements TreeAlgorithmStrategy {
 
     @Override
     public List<CategoryNode> getFullTree() {
-        return new ArrayList<>(nodes);
+        List<CategoryNode> roots = new ArrayList<>();
+        Map<String, CategoryNode> nodeMap = new HashMap<>();
+
+        for (CategoryNode node : nodes) {
+            node.setChildren(new ArrayList<>());
+            nodeMap.put(node.getId(), node);
+        }
+
+        for (CategoryNode node : nodes) {
+            String parentId = node.getParentId();
+            if (parentId == null || parentId.isEmpty()) {
+                roots.add(node);
+            } else {
+                CategoryNode parent = nodeMap.get(parentId);
+                if (parent != null) {
+                    parent.addChildNode(node);
+                }
+            }
+        }
+
+        return roots;
     }
 
     // BFS usando ArrayDeque como cola

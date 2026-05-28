@@ -3,47 +3,134 @@ openapi: 3.0.3
 info:
   title: E-commerce Tree API
   version: 1.0.0
-  description: API para gestión de estructuras jerárquicas
+  description: API para gestion de estructuras jerarquicas con selector de estrategia y persistencia.
 
 servers:
-  - url: http://localhost:8080
+  - url: http://localhost:8081
 
 paths:
 
   /nodes/root:
     post:
-      summary: Crear nodo raíz
-
+      summary: Crear nodo raiz
       requestBody:
         required: true
-
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateNodeRequest'
-
       responses:
         '201':
-          description: Nodo raíz creado
+          description: Nodo raiz creado
+
+  /nodes/{parentId}/children:
+    post:
+      summary: Agregar nodo hijo
+      parameters:
+        - name: parentId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateNodeRequest'
+      responses:
+        '201':
+          description: Nodo hijo creado
 
   /tree:
     get:
-      summary: Obtener árbol completo
-
+      summary: Obtener arbol completo
       responses:
         '200':
-          description: Árbol obtenido correctamente
+          description: Arbol obtenido correctamente
+
+  /tree/bfs:
+    get:
+      summary: Recorrido BFS
+      responses:
+        '200':
+          description: Recorrido obtenido correctamente
+
+  /tree/dfs:
+    get:
+      summary: Recorrido DFS
+      responses:
+        '200':
+          description: Recorrido obtenido correctamente
+
+  /tree/height:
+    get:
+      summary: Altura del arbol
+      responses:
+        '200':
+          description: Altura obtenida correctamente
+
+  /tree/validate:
+    get:
+      summary: Validar que no existan ciclos
+      responses:
+        '200':
+          description: Validacion obtenida correctamente
+
+  /tree/{nodeId}/subtree:
+    get:
+      summary: Obtener subarbol
+      parameters:
+        - $ref: '#/components/parameters/NodeId'
+      responses:
+        '200':
+          description: Subarbol obtenido correctamente
+
+  /tree/{nodeId}/path:
+    get:
+      summary: Obtener ruta desde la raiz
+      parameters:
+        - $ref: '#/components/parameters/NodeId'
+      responses:
+        '200':
+          description: Ruta obtenida correctamente
+
+  /tree/{nodeId}/depth:
+    get:
+      summary: Obtener profundidad de un nodo
+      parameters:
+        - $ref: '#/components/parameters/NodeId'
+      responses:
+        '200':
+          description: Profundidad obtenida correctamente
+
+  /tree/{nodeId}/ancestors:
+    get:
+      summary: Obtener ancestros de un nodo
+      parameters:
+        - $ref: '#/components/parameters/NodeId'
+      responses:
+        '200':
+          description: Ancestros obtenidos correctamente
 
 components:
+
+  parameters:
+    NodeId:
+      name: nodeId
+      in: path
+      required: true
+      schema:
+        type: string
 
   schemas:
 
     CreateNodeRequest:
       type: object
-
       properties:
-        value:
+        name:
           type: string
-
+        description:
+          type: string
       required:
-        - value
+        - name

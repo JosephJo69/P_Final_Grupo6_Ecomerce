@@ -1,6 +1,13 @@
 gt\edu\umg\repository\PostgresRepository.class
-gt\edu\umg\model\MongoNode.class
+gt\edu\umg\controller\ApiExceptionHandler.class
 gt\edu\umg\repository\MemoryRepository.class
 gt\edu\umg\controller\TreeController.class
+gt\edu\umg\service\CategoryTreeService.class
+gt\edu\umg\repository\MongoStorageRepository.class
+gt\edu\umg\config\PostgresConfig.class
+gt\edu\umg\model\MongoNode.class
+gt\edu\umg\dto\CreateNodeRequest.class
+gt\edu\umg\config\TreeStrategyConfig.class
+gt\edu\umg\repository\TreeStorageRepository.class
 gt\edu\umg\TreeAppApplication.class
 gt\edu\umg\repository\MongoNodeRepository.class

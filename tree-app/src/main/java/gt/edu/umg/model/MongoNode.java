@@ -13,7 +13,9 @@ public class MongoNode {
     @Id
     private String id; // Identificador único generado por MongoDB
     
-    private String value; // Valor o nombre que contiene el nodo
+    private String name; // Nombre de la categoria
+
+    private String description; // Descripcion opcional
     
     // Mapeo del ID padre para reconstruir la estructura jerárquica del árbol
     private String parentId; 
@@ -21,8 +23,9 @@ public class MongoNode {
     // Constructores base para la persistencia
     public MongoNode() {}
 
-    public MongoNode(String value, String parentId) {
-        this.value = value;
+    public MongoNode(String name, String description, String parentId) {
+        this.name = name;
+        this.description = description;
         this.parentId = parentId;
     }
 
@@ -30,8 +33,11 @@ public class MongoNode {
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
 
-    public String getValue() { return value; }
-    public void setValue(String value) { this.value = value; }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
 
     public String getParentId() { return parentId; }
     public void setParentId(String parentId) { this.parentId = parentId; }
